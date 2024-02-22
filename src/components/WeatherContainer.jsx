@@ -1,7 +1,12 @@
+import SearchComponent from "./SearchComponent"
+import WeatherCard from "./WeatherCard"
 
 const WeatherContainer = ()=>{
     return (
-        <div>WeatherContainer</div>
+        <div>
+            <SearchComponent/>
+            <WeatherCard/>
+        </div>
     )
 }
 
