@@ -10,7 +10,7 @@ const SearchComponent = () =>{
     const handleSearch = ()=>{
         LocationToCoordinates(placeName)
         .then(locationInfo => {
-            dispatch(setLocation({lat:locationInfo[0].lat, lon:locationInfo[0].lon}))
+            dispatch(setLocation(...locationInfo))
         })
         .catch(error => {
             console.error("Promise rejected with error:", error);
