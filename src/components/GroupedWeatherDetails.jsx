@@ -13,14 +13,16 @@ const GroupedWeatherDetails = () => {
         FiveDaysWeatherData(location.lat,location.lon)
         .then(weatherData => {
             const groupedData = groupWeatherDataByDate(weatherData.list)
+            console.log(groupedData)
             setWeatherData(groupedData)
         })
     },[])
 
     return(
         <div>
+            <div>Weather forcast for next few days</div>
             {weatherData.map(data => (
-               <WeatherInfo data={data} key={data.dt}/> 
+               <WeatherInfo data={data} key={data.data[0].dt}/> 
             ))}
         </div>)
 }

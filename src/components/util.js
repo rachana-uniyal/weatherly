@@ -24,18 +24,42 @@ function getCompassDirection(degrees) {
 function groupWeatherDataByDate(weatherDataArray) {
     const groupedByDate = {};
   
+    // Group data by date
     weatherDataArray.forEach(item => {
-      // Extract the date part from the dt_txt property
       const date = item.dt_txt.split(' ')[0];
-
       if (!groupedByDate[date]) {
         groupedByDate[date] = [];
       }
-  
       groupedByDate[date].push(item);
     });
   
-    return groupedByDate;
-  }
+    // Convert grouped data into an array format
+    const groupedDataArray = Object.keys(groupedByDate).map(date => {
+      return {
+        date: date,
+        data: groupedByDate[date]
+      };
+    });
+  
+    return groupedDataArray;
+}
 
-export {kelvinToCelsius, convertUnixTimestampToReadableTime, getCompassDirection, groupWeatherDataByDate}
+function convertToReadableTime(datetimeStr) {
+    // Parse the datetime string into a Date object
+    const date = new Date(datetimeStr);
+  
+    const options = { hour: 'numeric', hour12: true };
+    const readableTime = date.toLocaleTimeString('en-US', options);
+  
+    return readableTime;
+}
+
+function formatDate(dateStr) {
+  const date = new Date(dateStr);
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  const formattedDate = date.toLocaleDateString('en-US', options);
+  return formattedDate;
+}
+  
+
+export {kelvinToCelsius, convertUnixTimestampToReadableTime, getCompassDirection, groupWeatherDataByDate, convertToReadableTime, formatDate}
