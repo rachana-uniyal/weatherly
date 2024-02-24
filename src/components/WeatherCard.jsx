@@ -1,20 +1,58 @@
 import { useEffect, useState } from "react"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { WeatherData } from "./weatherAPIs"
+import ErrorComponent from "./ErrorComponent"
+import { toggleError} from "../redux/locationSlice"
 import { kelvinToCelsius,convertUnixTimestampToReadableTime,getCompassDirection } from "./util"
 
 const WeatherCard = () =>{
     const location = useSelector((state)=> state.location)
     const [weatherData, setWeatherData] = useState({})
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(location.error)
+    const dispatch = useDispatch()
 
     useEffect(()=>{
         WeatherData(location.lat,location.lon)
         .then(weatherData =>{
             setWeatherData(weatherData)
+            setLoading(false)
         })
-    },[])
+        .catch(err => {
+            console.error(err)
+            setError(true)
+            setLoading(false)
+            if (!error){
+                dispatch(toggleError())
+            }
+        })
+    },[location.lat, location.lon, dispatch, error])
 
-    
+    if (error) return <ErrorComponent />
+
+    if (loading) {
+        // Render shimmer UI elements while loading
+        return (
+            <div className="flex flex-col items-center bg-gray-100 mx-64 py-4 rounded-xl shadow-md">
+                <div className="h-6 w-48 shimmer rounded-md"></div>
+                <div className="mt-4 h-8 w-full shimmer rounded-md"></div>
+                <div className="mt-2 h-6 w-3/4 shimmer rounded-md"></div>
+                <div className="mt-2 h-4 w-1/2 shimmer rounded-md"></div>
+                <div className="flex mt-2">
+                    <div className="h-4 w-1/4 shimmer rounded-md"></div>
+                </div>
+                <div className="flex mt-2">
+                    <div className="h-4 w-1/3 shimmer rounded-md mr-10"></div>
+                    <div className="h-4 w-1/3 shimmer rounded-md"></div>
+                </div>
+                <div className="flex mt-2">
+                    <div className="h-4 w-1/4 shimmer rounded-md mr-8"></div>
+                    <div className="h-4 w-1/4 shimmer rounded-md"></div>
+                </div>
+            </div>
+        );
+    }
+
         const description = weatherData?.weather?.[0]?.description
         const currentTemp = kelvinToCelsius(weatherData?.main?.temp)
         const humidity = weatherData?.main?.humidity

@@ -47,10 +47,15 @@ function groupWeatherDataByDate(weatherDataArray) {
 function convertToReadableTime(datetimeStr) {
     // Parse the datetime string into a Date object
     const date = new Date(datetimeStr);
-  
+
+    const istOffset = 5.5 * 60; 
+    const localOffset = date.getTimezoneOffset(); 
+    const totalOffset = istOffset - localOffset; 
+    const istDate = new Date(date.getTime() + totalOffset * 60000); 
+
     const options = { hour: 'numeric', hour12: true };
-    const readableTime = date.toLocaleTimeString('en-US', options);
-  
+    const readableTime = istDate.toLocaleTimeString('en-US', options);
+    console.log("jjjj", readableTime)
     return readableTime;
 }
 
