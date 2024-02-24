@@ -1,18 +1,29 @@
+import dayjs from 'dayjs'
+
 function kelvinToCelsius(kelvinTemp) {
     return Math.round(kelvinTemp - 273.15)
 }
 
 function convertUnixTimestampToReadableTime(unixTimestamp) {
-    const date = new Date(unixTimestamp * 1000);
+  // Convert Unix timestamp to milliseconds and create a Date object
+  const date = new Date(unixTimestamp * 1000);
 
-    // Extract hours and minutes
-    const hours = date.getUTCHours();
-    const minutes = date.getUTCMinutes();
+  // Convert UTC date to IST by adding 5 hours and 30 minutes
+  date.setHours(date.getUTCHours() + 5);
+  date.setMinutes(date.getUTCMinutes() + 30);
 
-    // Format the time in HH:MM format, converting to 12-hour format with AM/PM
-    const formattedTime = `${hours % 12 || 12}:${minutes < 10 ? '0' + minutes : minutes} ${hours < 12 ? 'AM' : 'PM'}`;
+  // Extract hours and minutes
+  const hours = date.getHours(); // Note: Not using getUTCHours() since we've manually adjusted the date to IST
+  const minutes = date.getMinutes();
 
-    return formattedTime;
+  // Format the time in HH:MM format, converting to 12-hour format with AM/PM
+  const hoursIn12HourFormat = hours % 12 || 12; // Convert 24-hour time to 12-hour format
+  const formattedMinutes = minutes < 10 ? '0' + minutes : minutes; // Ensure two-digit formatting
+  const amOrPm = hours < 12 ? 'AM' : 'PM'; // Determine AM/PM
+
+  const formattedTime = `${hoursIn12HourFormat}:${formattedMinutes} ${amOrPm}`;
+
+  return formattedTime;
 }
 
 function getCompassDirection(degrees) {
@@ -45,18 +56,10 @@ function groupWeatherDataByDate(weatherDataArray) {
 }
 
 function convertToReadableTime(datetimeStr) {
-    // Parse the datetime string into a Date object
-    const date = new Date(datetimeStr);
+  const formatString = 'h:mm A'
+  const readableTime = dayjs(datetimeStr).format(formatString)
 
-    const istOffset = 5.5 * 60; 
-    const localOffset = date.getTimezoneOffset(); 
-    const totalOffset = istOffset - localOffset; 
-    const istDate = new Date(date.getTime() + totalOffset * 60000); 
-
-    const options = { hour: 'numeric', hour12: true };
-    const readableTime = istDate.toLocaleTimeString('en-US', options);
-    console.log("jjjj", readableTime)
-    return readableTime;
+  return readableTime
 }
 
 function formatDate(dateStr) {
