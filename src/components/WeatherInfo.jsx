@@ -8,7 +8,7 @@ const WeatherInfo = ({ data }) => {
             </div>
             {data.data.map(wInfo => (
                 <div key={wInfo.dt} className="flex flex-col bg-red-100 mx-2 my-2 md:mx-4 bg-red-50 rounded-full shadow-sm p-4">
-                    <div>{convertToReadableTime(wInfo.dt_txt)}</div>
+                    <div className="text-indigo-800">{convertToReadableTime(wInfo.dt_txt)}</div>
                     <div className="text-xs font-light text-slate-500">feels like {kelvinToCelsius(wInfo.main.feels_like)}°C</div>
                     <div className="text-xs font-light text-slate-500">temp {kelvinToCelsius(wInfo.main.temp)}°C</div>
                     <div className="text-xs font-light text-slate-500">humidity {wInfo.main.humidity}%</div>
